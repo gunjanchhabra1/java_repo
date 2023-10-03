@@ -22,9 +22,10 @@ jobs:
           
       - name: Update JSON Variable
         run: |
-          echo '{ "image_version": "2.0" }' >> version.json
-          # Upload the updated JSON file to S3
-          aws s3 cp version.json s3://demo-bucket-acs/version.json
+          python main.py
+          # echo '{ "image_version": "2.0" }' >> version.json
+          # # Upload the updated JSON file to S3
+          # aws s3 cp version.json s3://demo-bucket-acs/version.json
         # working-directory: ${{ github.workspace }}
 
       # - name: Commit Changes to GitHub

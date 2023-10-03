@@ -1,0 +1,38 @@
+name: Update S3 Variable
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  update-s3:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          
+      - name: Update JSON Variable
+        run: |
+          echo '{ "image_version": "2.0" }' > version.json
+          # Upload the updated JSON file to S3
+          aws s3 cp version.json s3://demo-bucket-acs/version.json
+        # working-directory: ${{ github.workspace }}
+
+      # - name: Commit Changes to GitHub
+      #   run: |
+      #     git config user.name "GitHub Actions"
+      #     git config user.email "actions@github.com"
+      #     git add version.json
+      #     git commit -m "Update image_version in version.json"
+      #     git push
+      #   working-directory: ${{ github.workspace }}
+

@@ -19,14 +19,22 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      - name: access s3 bucket 
+        run: | 
+          aws s3 cp s3://demo-bucket-acs/version.json .
+          # Use jq to update the JSON key's value
+          jq '.image_version = "0.0.0"' version.json > updated-version.json
+          aws s3 cp updated-version.json s3://demo-bucket-acs/version.json    #Upload the updated JSON file back to S3
+          aws s3 cp s3://demo-bucket-acs/version.json - | cat -
           
-      - name: Update JSON Variable
-        run: |
-          pip3 install requests boto3
-          python main.py
-          # echo '{ "image_version": "2.0" }' >> version.json
-          # # Upload the updated JSON file to S3
-          # aws s3 cp version.json s3://demo-bucket-acs/version.json
+      # - name: Update JSON Variable
+      #   run: |
+      #     pip3 install requests boto3
+      #     python main.py
+      #     # echo '{ "image_version": "2.0" }' >> version.json
+      #     # # Upload the updated JSON file to S3
+      #     # aws s3 cp version.json s3://demo-bucket-acs/version.json
         # working-directory: ${{ github.workspace }}
 
       # - name: Commit Changes to GitHub
@@ -37,4 +45,3 @@ jobs:
       #     git commit -m "Update image_version in version.json"
       #     git push
       #   working-directory: ${{ github.workspace }}
-

@@ -1,15 +1,19 @@
 import json
 import boto3
 
-s3 = boto3.resource('s3')
-# s3 = boto3.client('s3')
-                #  aws_access_key_id='MY_AWS_KEY_ID',
-                #  aws_secret_access_key='MY_AWS_SECRET_ACCESS_KEY'
-                
+# s3_resource = boto3.resource('s3')
+# s3_client = boto3.client('s3', aws_access_key_id='AKIA4FNAISNCID2OJXTE', aws_secret_access_key='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')
+s3_client = boto3.client('s3')
 bucket_name = 'demo-bucket-acs'
 object_key = 'version.json'
-json_object =  s3.Object(bucket_name,object_key)
-metadata = {"image_version": "2.2.0"}
-json_object.copy_from(CopySource={'Bucket': bucket_name, 'Key': object_key}, Metadata=metadata, MetadataDirective='REPLACE')
-updated_metadata = json_object.metadata
-print(updated_metadata)
+update_key = "image_version"
+new_value = "1.1.2"
+response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+json_data = json.loads(response['Body'].read().decode('utf-8'))
+json_data[update_key] = new_value
+s3_client.put_object(
+    Bucket=bucket_name,
+    Key=object_key,
+    Body=json.dumps(json_data)
+)
+print(json.dumps(json_data, indent=4))

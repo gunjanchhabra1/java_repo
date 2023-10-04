@@ -2,7 +2,6 @@ import json
 import boto3
 
 # s3_resource = boto3.resource('s3')
-# s3_client = boto3.client('s3', aws_access_key_id='AKIA4FNAISNCID2OJXTE', aws_secret_access_key='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')
 s3_client = boto3.client('s3')
 bucket_name = 'demo-bucket-acs'
 object_key = 'version.json'

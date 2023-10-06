@@ -37,7 +37,7 @@ jobs:
       - name: access s3 bucket 
         run: | 
           aws s3 cp s3://demo-bucket-acs/version.json .
-          jq '.image_version = "1.9.9"' version.json > updated-version.json
+          jq '.image_version = $BUILD_NUMBER' version.json > updated-version.json
           aws s3 cp updated-version.json s3://demo-bucket-acs/version.json 
           aws s3 cp s3://demo-bucket-acs/version.json - | cat -
 

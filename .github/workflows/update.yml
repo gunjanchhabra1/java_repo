@@ -44,7 +44,8 @@ jobs:
            new_version=$(jq -r '.image_version' ./version.json)
            echo $new_version
 
-      # - name: Build the new Docker image
-      #   run: |
+      - name: Build the new Docker image
+        run: |
+          echo $new_version
       #     docker build -t ghcr.io/${{ github.repository }}:$new_version .
       #     docker push ghcr.io/${{ github.repository }}:$new_version

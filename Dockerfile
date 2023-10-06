@@ -1,2 +1,2 @@
-FROM tomcat:9
-EXPOSE 80
+# FROM tomcat:9
+# EXPOSE 80

@@ -24,12 +24,12 @@ jobs:
           aws-region: us-east-1
 
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: gunjanchhabra1
-          password: ${{ secrets.SECRET_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: gunjanchhabra1
+      #     password: ${{ secrets.SECRET_TOKEN }}
 
       - name: access s3 bucket 
         run: | 
@@ -38,17 +38,20 @@ jobs:
           aws s3 cp updated-version.json s3://demo-bucket-acs/version.json 
           aws s3 cp s3://demo-bucket-acs/version.json - | cat -
 
-      - name: get json file and version
-        id: get_version
-        run: |
-           aws s3 cp s3://demo-bucket-acs/version.json ./version.json
-           new_version=$(jq -r '.image_version' ./version.json)
-           echo "version=$new_version" >> $GITHUB_OUTPUT
+      # - name: Get file from s3
+      #   run: |
+      #     aws s3 cp s3://demo-bucket-acs/version.json ./version.json
+
+      # - name: Get version from json file
+      #   id: get_version
+      #   run: |
+      #      new_version=$(jq -r '.image_version' ./version.json)
+      #      echo "version=$new_version" >> $GITHUB_OUTPUT
 
 
-      - name: Build the new Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}:$new_version .
-          docker push ghcr.io/${{ github.repository }}:$new_version
-        env:
-          new_version: ${{ steps.get_version.outputs.version }} 
+      # - name: Build the new Docker image
+      #   run: |
+      #     docker build -t ghcr.io/${{ github.repository }}:$new_version .
+      #     docker push ghcr.io/${{ github.repository }}:$new_version
+      #   env:
+      #     new_version: ${{ steps.get_version.outputs.version }} 

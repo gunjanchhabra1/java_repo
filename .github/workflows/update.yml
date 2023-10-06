@@ -42,10 +42,12 @@ jobs:
         run: |
            aws s3 cp s3://demo-bucket-acs/version.json ./version.json
            new_version=$(jq -r '.image_version' ./version.json)
-           echo $new_version
+           docker build -t ghcr.io/${{ github.repository }}:$new_version .
+           docker push ghcr.io/${{ github.repository }}:$new_version
 
-      - name: Build the new Docker image
-        run: |
-          echo $new_version
+
+      # - name: Build the new Docker image
+      #   run: |
+      #     echo $new_version
       #     docker build -t ghcr.io/${{ github.repository }}:$new_version .
       #     docker push ghcr.io/${{ github.repository }}:$new_version

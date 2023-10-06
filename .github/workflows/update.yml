@@ -38,8 +38,12 @@ jobs:
           aws s3 cp updated-version.json s3://demo-bucket-acs/version.json 
           aws s3 cp s3://demo-bucket-acs/version.json - | cat -
 
+      - name: get json file and get the version
+        run: |
+           aws s3 cp s3://demo-bucket-acs/version.json ./version.json
+           $new_version=$(jq -r '.image_version' ./version.json)
+
       - name: Build the new Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}:$BUILD_NUMBER .
-          docker push ghcr.io/${{ github.repository }}:$BUILD_NUMBER
-          
+          docker build -t ghcr.io/${{ github.repository }}:$new_version .
+          docker push ghcr.io/${{ github.repository }}:$new_version
